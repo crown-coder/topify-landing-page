@@ -57,7 +57,7 @@ const Hero = () => {
                 />
               </svg>
             </Link>
-            <a
+            {/* <a
               href="#features"
               className="inline-flex items-center px-8 py-4 rounded-xl bg-white/10 text-blue-100 font-semibold hover:bg-white/20 border border-white/20 transition-all duration-300 shadow-sm hover:shadow-md"
             >
@@ -75,7 +75,7 @@ const Hero = () => {
                   d="M19 9l-7 7-7-7"
                 />
               </svg>
-            </a>
+            </a> */}
           </div>
         </div>
 
