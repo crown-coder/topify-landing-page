@@ -1,0 +1,15 @@
+export { default as Navbar } from './Navbar';
+export { default as Hero } from './Hero';
+export { default as TrustedPartners } from './TrustedPartners';
+export { default as AboutUs } from './AboutUs';
+export { default as WhyPartnersChoose } from './WhyPartnersChoose';
+export { default as ContactGetStarted } from './ContactGetStarted';
+export { default as CTA } from './CTA';
+export { default as FAQs } from './FAQs';
+export { default as FeaturesServicesSection } from './FeaturesServicesSection';
+export { default as UseCasesSolutions } from './UseCasesSolutions';
+export { default as AnalyticsStatsSection } from './AnalyticsStatsSection';
+export { default as Testimonials } from './Testimonials';
+export { default as HowItWorks } from './HowItWorks';
+export { default as TeamLeadershipSection } from './TeamLeadershipSection';
+export { default as Footer } from './Footer';
