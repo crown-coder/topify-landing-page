@@ -1,12 +1,49 @@
+import { useState } from "react";
+import axios from "axios";
+
 const ContactGetStarted = () => {
+    const [formData, setFormData] = useState({
+        name: "",
+        email: "",
+        company: "",
+        interest: "",
+        message: "",
+    });
+    const [loading, setLoading] = useState(false);
+    const [modal, setModal] = useState({ show: false, message: "", success: false });
+
+    const handleChange = (e) => {
+        setFormData({ ...formData, [e.target.id]: e.target.value });
+    };
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        setLoading(true);
+        try {
+            const res = await axios.post("https://topify.global/contact", formData);
+            setModal({
+                show: true,
+                message: res.data?.message || "Message sent successfully!",
+                success: true,
+            });
+            setFormData({ name: "", email: "", company: "", interest: "", message: "" });
+        } catch (err) {
+            setModal({
+                show: true,
+                message:
+                    err.response?.data?.message || "Something went wrong. Please try again.",
+                success: false,
+            });
+        } finally {
+            setLoading(false);
+        }
+    };
+
     return (
         <section id="contact" className="bg-white py-20">
             <div className="max-w-6xl mx-auto px-6">
                 {/* Heading */}
                 <div className="text-center mb-16">
-                    {/* <div className="inline-block bg-blue-50 text-blue-700 px-4 py-2 rounded-full text-sm font-medium mb-6">
-                        Get In Touch
-                    </div> */}
                     <h2 className="text-3xl sm:text-4xl text-gray-900 mb-6">
                         Contact & Get Started
                     </h2>
@@ -86,10 +123,13 @@ const ContactGetStarted = () => {
                         </div>
                     </div>
 
+
                     {/* Contact Form */}
                     <div className="bg-gray-50 p-8 rounded-xl">
-                        <h3 className="text-xl font-semibold text-gray-900 mb-6">Send us a message</h3>
-                        <form className="space-y-6">
+                        <h3 className="text-xl font-semibold text-gray-900 mb-6">
+                            Send us a message
+                        </h3>
+                        <form className="space-y-6" onSubmit={handleSubmit}>
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                                 <div>
                                     <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">
@@ -98,6 +138,9 @@ const ContactGetStarted = () => {
                                     <input
                                         type="text"
                                         id="name"
+                                        value={formData.name}
+                                        onChange={handleChange}
+                                        required
                                         className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
                                         placeholder="Your name"
                                     />
@@ -109,6 +152,9 @@ const ContactGetStarted = () => {
                                     <input
                                         type="email"
                                         id="email"
+                                        value={formData.email}
+                                        onChange={handleChange}
+                                        required
                                         className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
                                         placeholder="your.email@example.com"
                                     />
@@ -122,6 +168,8 @@ const ContactGetStarted = () => {
                                 <input
                                     type="text"
                                     id="company"
+                                    value={formData.company}
+                                    onChange={handleChange}
                                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
                                     placeholder="Your company name"
                                 />
@@ -133,6 +181,9 @@ const ContactGetStarted = () => {
                                 </label>
                                 <select
                                     id="interest"
+                                    value={formData.interest}
+                                    onChange={handleChange}
+                                    required
                                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
                                 >
                                     <option value="">Select an option</option>
@@ -150,6 +201,9 @@ const ContactGetStarted = () => {
                                 <textarea
                                     id="message"
                                     rows={4}
+                                    value={formData.message}
+                                    onChange={handleChange}
+                                    required
                                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
                                     placeholder="Tell us about your project or inquiry..."
                                 ></textarea>
@@ -157,28 +211,36 @@ const ContactGetStarted = () => {
 
                             <button
                                 type="submit"
-                                className="w-full bg-blue-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-blue-700 transition-colors"
+                                disabled={loading}
+                                className="w-full bg-blue-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-blue-700 transition-colors disabled:opacity-60"
                             >
-                                Send Message
+                                {loading ? "Sending..." : "Send Message"}
                             </button>
                         </form>
                     </div>
                 </div>
-
-                {/* Additional CTA */}
-                <div className="text-center mt-16">
-                    <p className="text-gray-600 mb-6">Prefer to email directly?</p>
-                    <a
-                        href="mailto:business@topify.ng"
-                        className="inline-flex items-center px-6 py-3 border border-gray-300 rounded-lg text-blue-600 font-semibold hover:bg-gray-50 transition-colors"
-                    >
-                        Email business@topify.ng
-                        <svg className="ml-2 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
-                        </svg>
-                    </a>
-                </div>
             </div>
+
+            {/* Modal */}
+            {modal.show && (
+                <div className="fixed inset-0 flex items-center justify-center bg-black/50 bg-opacity-50 z-50">
+                    <div className="bg-white rounded-xl shadow-xl p-6 max-w-sm w-full text-center">
+                        <h4
+                            className={`text-lg font-semibold mb-4 ${modal.success ? "text-green-600" : "text-red-600"
+                                }`}
+                        >
+                            {modal.success ? "Success" : "Error"}
+                        </h4>
+                        <p className="text-gray-700 mb-6">{modal.message}</p>
+                        <button
+                            onClick={() => setModal({ ...modal, show: false })}
+                            className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                        >
+                            OK
+                        </button>
+                    </div>
+                </div>
+            )}
         </section>
     );
 };
