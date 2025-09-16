@@ -20,7 +20,7 @@ const ContactGetStarted = () => {
         e.preventDefault();
         setLoading(true);
         try {
-            const res = await axios.post("https://topify.global/contact", formData);
+            const res = await axios.post("https://app.topify.ng/contact", formData);
             setModal({
                 show: true,
                 message: res.data?.message || "Message sent successfully!",
